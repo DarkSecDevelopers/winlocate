@@ -3,7 +3,7 @@
    <body>
       <h1>It works!</h1>
       <?php
-      $file = fopen("location.txt", "w+");
+      $file = fopen("location.loc", "w+");
       fwrite($file, file_get_contents("php://input"));
       fclose($file);
       ?>
