@@ -3,8 +3,9 @@
    <body>
       <h1>It works!</h1>
       <?php
-      $file = date("dHism") . ".loc";
-      file_put_contents($file, file_get_contents("php://input"));
+      $file = fopen("location.txt", "w+");
+      fwrite($file, file_get_contents("php://input"));
+      fclose($file);
       ?>
    </body>
 </html>
