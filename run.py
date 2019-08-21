@@ -39,7 +39,7 @@ def checkNgrok():
         system('clear')
 checkNgrok()
 
-system('rm *.exe')
+system('rm *.exe 2> /dev/null')
 system('cp Template/get-location-oneliner.ps1 ./ > /dev/null')
 system('cp Template/Ps1_To_Exe_x64.exe ./ > /dev/null')
 system('cp Template/Ps1_To_Exe.exe ./ > /dev/null')
